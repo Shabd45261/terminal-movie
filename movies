@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# CloudX Movies streamer - Universal Terminal Launcher
+# Terminal Movies streamer - Universal Terminal Launcher
 set -e
 
 cd "$(dirname "$0")"

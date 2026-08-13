@@ -332,7 +332,13 @@ class TUI:
             self._last_esc = 0.0
 
         if self.msg:
-            if self.msg.startswith("Quit CloudX"):
+            if self.msg.startswith("Quit Terminal"):
+                if key in (ord("y"), ord("Y")):
+                    return True
+                if key in (K_ESC,) + ENTER_KEYS + (ord("n"), ord("N")):
+                    self.msg = None
+                    self.dirty = True
+            elif self.msg.startswith("Quit Terminal"):
                 if key in (ord("y"), ord("Y")):
                     return True
                 if key in (K_ESC,) + ENTER_KEYS + (ord("n"), ord("N")):
@@ -364,7 +370,7 @@ class TUI:
                 self.state = "home"
                 self.dirty = True
             else:
-                self.msg = "Quit CloudX Movies?  (y=yes / n=no)"
+                self.msg = "Quit Terminal Movies?  (y=yes / n=no)"
                 self.dirty = True
             return False
         if key in ENTER_KEYS + (K_CTRLP,):
@@ -447,7 +453,7 @@ class TUI:
             if item:
                 self.activate(item)
         elif key == K_ESC:
-            self.msg = "Quit CloudX Movies?  (y=yes / n=no)"
+            self.msg = "Quit Terminal Movies?  (y=yes / n=no)"
             self.dirty = True
         return False
 
@@ -543,7 +549,7 @@ class TUI:
         self.scr.refresh()
 
     def _header(self):
-        title = " CLOUDX MOVIES "
+        title = " TERMINAL MOVIES "
         self.add(0, 0, title, ACCENT, bold=True)
         n = len(title)
         if self.state == "search":
