@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+# CloudX Movies streamer - Universal Terminal Launcher
+set -e
+
+cd "$(dirname "$0")"
+
+PY=python3
+if command -v python >/dev/null 2>&1; then PY=python; fi
+
+# Function to check if a python module is installed
+check_mod() {
+  $PY -c "import $1" >/dev/null 2>&1
+}
+
+# Install core dependencies
+if ! check_mod flask; then
+  echo "[movies] Installing core dependencies (flask)..."
+  $PY -m pip install -q flask
+fi
+
+# Windows-specific curses fix
+if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]; then
+  if ! check_mod curses; then
+    echo "[movies] Windows detected: Installing windows-curses..."
+    $PY -m pip install -q windows-curses
+  fi
+fi
+
+# Poster thumbnails (Pillow)
+if ! check_mod PIL; then
+  echo "[movies] Installing thumbnail support (Pillow)..."
+  $PY -m pip install -q pillow
+fi
+
+PORT="${PORT:-8080}"
+LOG="server.log"
+
+rm -f "$LOG"
+
+echo ""
+echo "  ██████╗ ██╗      ██████╗ ██╗   ██╗██████╗ "
+echo " ██╔════╝ ██║     ██╔═══██╗╚██╗ ██╔╝██╔══██╗"
+echo " ██║      ██║     ██║   ██║ ╚████╔╝ ██████╔╝"
+echo " ██║      ██║     ██║   ██║  ╚██╔╝  ██╔═══╝ "
+echo " ╚██████╗ ███████╗╚██████╔╝   ██║   ██║     "
+echo "  ╚═════╝ ╚══════╝ ╚═════╝    ╚═╝   ╚═╝     "
+echo ""
+echo "  Starting local server..."
+echo "  Web UI:        http://localhost:${PORT}"
+echo "  Keyboard TUI:  type to search  ·  arrows pick  ·  Enter play/open  ·  Esc back  ·  Esc Esc quit"
+echo ""
+
+export PORT
+
+# Start server in the background
+$PY -m server.app >"$LOG" 2>&1 &
+SERVER_PID=$!
+cleanup() {
+  echo -e "\n[movies] Shutting down..."
+  kill "$SERVER_PID" 2>/dev/null || true
+}
+trap cleanup EXIT INT TERM
+
+# Wait until it answers
+ready=0
+for i in $(seq 1 30); do
+  if $PY -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:${PORT}/', timeout=2)" >/dev/null 2>&1; then
+    ready=1
+    break
+  fi
+  sleep 1
+done
+
+if [ "$ready" != "1" ]; then
+  echo "[movies] server failed to start. Check $LOG for details."
+  exit 1
+fi
+
+# Run the keyboard UI
+$PY -m server.tui

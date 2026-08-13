@@ -1,0 +1,16 @@
+{
+  "movies": [],
+  "series": [
+    {
+      "id": "7850278583678682192",
+      "title": "CloudX Player",
+      "poster": null,
+      "blurHash": null,
+      "detailPath": "avatar-the-last-airbender-YoJu6LgmUl9",
+      "type": "series",
+      "time": 1165.549502,
+      "se": 1,
+      "ep": 3
+    }
+  ]
+}

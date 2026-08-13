@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>CloudX Movies</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <div class="brand">CloudX<span>Movies</span></div>
+  <div class="search-wrap">
+    <input id="search" type="text" placeholder="Search movies, series, anime..." autocomplete="off">
+    <div id="suggest" class="suggest hidden"></div>
+  </div>
+</header>
+
+<div id="banner" class="banner hidden"></div>
+
+<main id="home"></main>
+
+<section id="results" class="hidden">
+  <h2 id="results-title"></h2>
+  <div id="results-grid" class="grid"></div>
+</section>
+
+<div id="modal" class="modal hidden">
+  <div class="modal-card">
+    <button id="modal-close" class="close">&times;</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
